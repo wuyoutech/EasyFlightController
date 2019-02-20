@@ -1,0 +1,28 @@
+#ifndef __MPU6050_H_
+#define __MPU6050_H_
+
+struct Euler
+{
+	float x;
+	float y;
+	float z;
+};
+
+struct RawValue
+{
+	unsigned short int x;
+	unsigned short int y;
+	unsigned short int z;
+};
+
+struct Quaternion
+{
+	float q0;
+	float q1;
+	float q2;
+	float q3;
+};
+
+struct Euler get_attitude(void);
+
+#endif
