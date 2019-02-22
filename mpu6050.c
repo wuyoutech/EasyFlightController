@@ -251,7 +251,7 @@ struct Euler quaternion_to_euler(struct Quaternion q)
 	return result;
 }
 
-struct Euler get_attitude(void){
+struct Euler attitude_get(void){
 	unsigned char buff[14];
 	mpu6050_get_value(buff);
 	unsigned short int acc_x,acc_y,acc_z,gyro_x,gyro_y,gyro_z;

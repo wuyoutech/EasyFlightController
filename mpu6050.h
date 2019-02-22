@@ -23,6 +23,6 @@ struct Quaternion
 	float q3;
 };
 
-struct Euler get_attitude(void);
+struct Euler attitude_get(void);
 
 #endif

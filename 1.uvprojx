@@ -412,6 +412,11 @@
               <FileType>1</FileType>
               <FilePath>.\mpu6050.c</FilePath>
             </File>
+            <File>
+              <FileName>config.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\config.c</FilePath>
+            </File>
           </Files>
         </Group>
       </Groups>
