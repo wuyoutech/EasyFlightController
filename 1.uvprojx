@@ -417,6 +417,11 @@
               <FileType>1</FileType>
               <FilePath>.\config.c</FilePath>
             </File>
+            <File>
+              <FileName>timer.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\timer.c</FilePath>
+            </File>
           </Files>
         </Group>
       </Groups>
