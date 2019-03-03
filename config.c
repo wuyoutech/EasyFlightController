@@ -93,11 +93,18 @@ void config_reset(void)
 {
 	struct config *  config = (struct config *)config_address;
 	//factory settings value
-	config->pitch_center_shift = 0;
-	config->roll_center_shift = 0;
-	config->yaw_center_shift = 0;
-	config->throttle_minimum_shift = 0;
+	config -> pitch_center_shift = 0;
+	config -> roll_center_shift = 0;
+	config -> yaw_center_shift = 0;
+	config -> throttle_minimum_shift = 0;
+	
+	config -> pitch_channel_number = 0;
+	config -> roll_channel_number = 1;
+	config -> yaw_channel_number = 2;
+	config -> throttle_channel_number = 3;
+	
 }
+//----- init config module ---
 void config_init(void)
 {
 	crc32_init(0x4c11db7);	//init crc32 table

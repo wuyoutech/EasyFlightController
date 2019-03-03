@@ -4,10 +4,16 @@
 //----config struct------
 struct config
 {
-	unsigned short int pitch_center_shift;
-	unsigned short int roll_center_shift;
-	unsigned short int yaw_center_shift;
-	unsigned short int throttle_minimum_shift;
+	//----- channel mapping -----
+	unsigned char pitch_channel_number;
+	unsigned char roll_channel_number;
+	unsigned char yaw_channel_number;
+	unsigned char throttle_channel_number;
+	//----- input calibration ---
+	short int pitch_center_shift;
+	short int roll_center_shift;
+	short int yaw_center_shift;
+	short int throttle_minimum_shift;
 };
 
 //----- functions -------

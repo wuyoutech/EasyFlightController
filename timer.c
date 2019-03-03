@@ -11,9 +11,14 @@
 #include "driverlib/interrupt.h"
 
 #include <timer.h>
+#include <config.h>
 
-struct pwm_input * pwm_input;
+//------ array for saving raw data ------
+unsigned int pwm_input_raw[6];
+//--- array for saving calibrated data --
+unsigned int pwm_input_calibrated[6];
 
+//-----   interrupt handler -------
 void timer0a_int_handler(void)
 {
 	TimerIntClear(WTIMER0_BASE,TimerIntStatus(WTIMER0_BASE,TIMER_CAPA_EVENT));
@@ -30,7 +35,7 @@ void timer0a_int_handler(void)
 	lasttime = nowtime;
 	//TODO:UPDATE TIME
 	if(count < 120000){
-		pwm_input->channel1 = count/50;
+		pwm_input_raw[0] = count/50;
 	}
 }
 
@@ -49,7 +54,7 @@ void timer0b_int_handler(void)
 	}
 	lasttime = nowtime;
 	if(count < 120000){
-		pwm_input->channel2 = count / 50;
+		pwm_input_raw[1] = count / 50;
 	}
 }
 void timer1a_int_handler(void)
@@ -67,7 +72,7 @@ void timer1a_int_handler(void)
 	}
 	lasttime = nowtime;
 	if(count < 120000){
-		pwm_input->channel3 = count / 50;
+		pwm_input_raw[2] = count / 50;
 	}
 }
 void timer1b_int_handler(void)
@@ -85,7 +90,7 @@ void timer1b_int_handler(void)
 	}
 	lasttime = nowtime;
 	if(count < 12000){
-		pwm_input->channel4 = count / 50;
+		pwm_input_raw[3] = count / 50;
 	}
 }
 void timer2a_int_handler(void)
@@ -103,7 +108,7 @@ void timer2a_int_handler(void)
 	}
 	lasttime = nowtime;
 	if(count < 12000){
-		pwm_input->channel5 = count / 50;
+		pwm_input_raw[4] = count / 50;
 	}
 }
 void timer2b_int_handler(void)
@@ -121,14 +126,12 @@ void timer2b_int_handler(void)
 	}
 	lasttime = nowtime;
 	if(count <12000){
-		pwm_input -> channel6 = count / 50;
+		pwm_input_raw[5] = count / 50;
 	}
 }
-
+// ------ initialize timers ----------
 void pwm_input_init(void)
 {
-	pwm_input = malloc(sizeof(struct pwm_input));
-	
 	SysCtlPeripheralEnable(SYSCTL_PERIPH_WTIMER0);
 	SysCtlPeripheralEnable(SYSCTL_PERIPH_WTIMER1);
 	SysCtlPeripheralEnable(SYSCTL_PERIPH_WTIMER2);
@@ -219,7 +222,33 @@ void pwm_input_init(void)
 	TimerEnable(WTIMER2_BASE,TIMER_A);
 	TimerEnable(WTIMER2_BASE,TIMER_B);
 }
-struct pwm_input * pwm_input_get(void)
+
+//------- get pwm input value --------
+unsigned int * pwm_input_get(void)
 {
-	return pwm_input;
+	struct config * config = config_get();
+	pwm_input_calibrated[config -> pitch_channel_number] = 
+		pwm_input_raw[config -> pitch_channel_number] - config -> pitch_center_shift;
+	
+	pwm_input_calibrated[config -> roll_channel_number] = 
+		pwm_input_raw[config -> roll_channel_number] - config -> roll_center_shift;
+	
+	pwm_input_calibrated[config -> yaw_channel_number] = 
+		pwm_input_raw[config -> yaw_channel_number] - config -> yaw_center_shift;
+	
+	pwm_input_calibrated[config -> throttle_channel_number] = 
+		pwm_input_raw[config -> throttle_channel_number] - config -> throttle_minimum_shift;
+
+	pwm_input_calibrated[4] = pwm_input_raw[4];
+	pwm_input_calibrated[5] = pwm_input_raw[5];
+	
+	return pwm_input_calibrated;
+}
+void pwm_calibration(void)
+{
+	struct config * config = config_get();
+	config -> pitch_center_shift = pwm_input_raw[config -> pitch_channel_number];
+	config -> roll_center_shift = pwm_input_raw[config -> roll_channel_number];
+	config -> yaw_center_shift = pwm_input_raw[config -> yaw_center_shift];
+	config -> throttle_minimum_shift = pwm_input_raw[config -> throttle_channel_number];
 }
