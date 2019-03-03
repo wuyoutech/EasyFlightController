@@ -251,4 +251,5 @@ void pwm_calibration(void)
 	config -> roll_center_shift = pwm_input_raw[config -> roll_channel_number];
 	config -> yaw_center_shift = pwm_input_raw[config -> yaw_center_shift];
 	config -> throttle_minimum_shift = pwm_input_raw[config -> throttle_channel_number];
+	config_write();
 }
