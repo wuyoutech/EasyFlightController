@@ -23,6 +23,9 @@
 
 
 #include <uart.h>
+#include <config.h>
+#include <mpu6050.h>
+#include <timer.h>
 
 
 int main(){
@@ -31,8 +34,15 @@ int main(){
 	SysCtlClockSet(SYSCTL_SYSDIV_4|SYSCTL_USE_PLL|SYSCTL_XTAL_16MHZ|
 		SYSCTL_OSC_MAIN);
 	
-	uart_init();
+	uart_init();	
 	printf("message\n");
+	
+	config_init();
+	if(!mpu6050_init()){
+		printf("mpu6050 not found\n");
+		while(true);
+	}
+	pwm_input_init();
 	
 	while(true);
 }

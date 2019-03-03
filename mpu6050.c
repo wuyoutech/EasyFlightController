@@ -93,6 +93,7 @@ bool mpu6050_init(void)
 	mpu6050_write_register(0x19,0x00);	//sampling 1khz
 	mpu6050_write_register(0x1b,0x18);	//set gyro range
 	mpu6050_write_register(0x1c,0x10);	//set accel range
+	return true;
 }
 
 void mpu6050_get_value(unsigned char * buff)
