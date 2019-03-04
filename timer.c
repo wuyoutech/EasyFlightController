@@ -253,3 +253,48 @@ void pwm_calibration(void)
 	config -> throttle_minimum_shift = pwm_input_raw[config -> throttle_channel_number];
 	config_write();
 }
+/********************************************************************/
+//pwm output
+void pwm_output_init()
+{
+	SysCtlPeripheralEnable(SYSCTL_PERIPH_WTIMER3);
+	SysCtlPeripheralEnable(SYSCTL_PERIPH_WTIMER5);
+	
+	SysCtlPeripheralEnable(SYSCTL_PERIPH_GPIOD);
+	
+	GPIOPinConfigure(GPIO_PD2_WT3CCP0);
+	GPIOPinConfigure(GPIO_PD3_WT3CCP1);
+	GPIOPinConfigure(GPIO_PD6_WT5CCP0);
+	GPIOPinConfigure(GPIO_PD7_WT5CCP1);
+	
+	GPIOPinTypeTimer(GPIO_PORTD_BASE,GPIO_PIN_2|GPIO_PIN_3|GPIO_PIN_6|GPIO_PIN_7);
+	
+	TimerConfigure(WTIMER3_BASE,TIMER_CFG_SPLIT_PAIR|TIMER_CFG_A_PWM|TIMER_CFG_B_PWM);
+	TimerConfigure(WTIMER5_BASE,TIMER_CFG_SPLIT_PAIR|TIMER_CFG_A_PWM|TIMER_CFG_B_PWM);
+	
+	#define max_count 200000
+	
+	TimerLoadSet(WTIMER3_BASE,TIMER_A,max_count);
+	TimerLoadSet(WTIMER3_BASE,TIMER_B,max_count);
+	TimerLoadSet(WTIMER5_BASE,TIMER_A,max_count);
+	TimerLoadSet(WTIMER5_BASE,TIMER_B,max_count);
+	
+	TimerMatchSet(WTIMER3_BASE,TIMER_A,max_count - 800*50);
+	TimerMatchSet(WTIMER3_BASE,TIMER_B,max_count - 800*50);
+	TimerMatchSet(WTIMER5_BASE,TIMER_A,max_count - 800*50);
+	TimerMatchSet(WTIMER5_BASE,TIMER_B,max_count - 800*50);
+	
+	
+	TimerEnable(WTIMER3_BASE,TIMER_A);
+	TimerEnable(WTIMER3_BASE,TIMER_B);
+	TimerEnable(WTIMER5_BASE,TIMER_A);
+	TimerEnable(WTIMER5_BASE,TIMER_B);
+}
+
+void pwm_output_set(unsigned int a,unsigned int b,unsigned int c,unsigned int d)	
+{
+	TimerMatchSet(WTIMER3_BASE,TIMER_A,max_count - a*50);
+	TimerMatchSet(WTIMER3_BASE,TIMER_B,max_count - b*50);
+	TimerMatchSet(WTIMER5_BASE,TIMER_A,max_count - c*50);
+	TimerMatchSet(WTIMER5_BASE,TIMER_B,max_count - d*50);
+}

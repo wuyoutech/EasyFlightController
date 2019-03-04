@@ -34,7 +34,7 @@ int main(){
 	SysCtlClockSet(SYSCTL_SYSDIV_4|SYSCTL_USE_PLL|SYSCTL_XTAL_16MHZ|
 		SYSCTL_OSC_MAIN);
 	
-	uart_init();	
+	uart_init();
 	printf("message\n");
 	
 	config_init();
@@ -43,6 +43,12 @@ int main(){
 		while(true);
 	}
 	pwm_input_init();
+	pwm_output_init();
 	
-	while(true);
+	while(true)
+	{
+		unsigned int * input;
+		input = pwm_input_get();
+		pwm_output_set(input[2],input[2],input[2],input[2]);
+	}
 }
