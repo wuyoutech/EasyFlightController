@@ -130,4 +130,3 @@ void config_init(void)
 	}
 	config_write();
 }
-		

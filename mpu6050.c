@@ -242,7 +242,7 @@ struct Euler quaternion_to_euler(struct Quaternion q)
 	if(TEST < -Threshold || TEST > Threshold){
 		int sign = TEST>0?1:-1;
 		result.z = -1 * sign * (double)atan2(q.q1,q.q0);
-		result.y = sign * (PI / 2.0);
+		result.y = sign * (PI / 2.0f);
 		result.x = 0;
 	}else{
 		result.x = atan2(2 * (q.q2 * q.q3 + q.q0 * q.q1),q.q0*q.q0 - q.q1 *q.q1 -q.q2*q.q2 + q.q3*q.q3);
@@ -255,7 +255,6 @@ struct Euler quaternion_to_euler(struct Quaternion q)
 struct Euler attitude_get(void){
 	unsigned char buff[14];
 	mpu6050_get_value(buff);
-	unsigned short int acc_x,acc_y,acc_z,gyro_x,gyro_y,gyro_z;
 	struct RawValue accel,gyro;
 	accel.x	= Byte16(buff[0],buff[1]);
 	accel.y = Byte16(buff[2],buff[3]);
