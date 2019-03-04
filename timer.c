@@ -1,9 +1,11 @@
 #include <stdint.h>
 #include <stdbool.h>
 #include <stdlib.h>
+#include "inc/hw_types.h"
 #include "inc/hw_memmap.h"
 #include "inc/hw_timer.h"
 #include "inc/hw_ints.h"
+#include "inc/hw_gpio.h"
 #include "driverlib/sysctl.h"
 #include "driverlib/gpio.h"
 #include "driverlib/timer.h"
@@ -261,6 +263,11 @@ void pwm_output_init()
 	SysCtlPeripheralEnable(SYSCTL_PERIPH_WTIMER5);
 	
 	SysCtlPeripheralEnable(SYSCTL_PERIPH_GPIOD);
+	while(!SysCtlPeripheralReady(SYSCTL_PERIPH_GPIOD));
+	// ----- unlock Pin -----
+	HWREG(GPIO_PORTD_BASE + GPIO_O_LOCK) = GPIO_LOCK_KEY;
+    HWREG(GPIO_PORTD_BASE + GPIO_O_CR)  |= GPIO_PIN_7;
+    HWREG(GPIO_PORTD_BASE + GPIO_O_LOCK) = 0x00;
 	
 	GPIOPinConfigure(GPIO_PD2_WT3CCP0);
 	GPIOPinConfigure(GPIO_PD3_WT3CCP1);
@@ -284,13 +291,12 @@ void pwm_output_init()
 	TimerMatchSet(WTIMER5_BASE,TIMER_A,max_count - 800*50);
 	TimerMatchSet(WTIMER5_BASE,TIMER_B,max_count - 800*50);
 	
-	
 	TimerEnable(WTIMER3_BASE,TIMER_A);
 	TimerEnable(WTIMER3_BASE,TIMER_B);
 	TimerEnable(WTIMER5_BASE,TIMER_A);
 	TimerEnable(WTIMER5_BASE,TIMER_B);
 }
-
+//-------- pwm output setter -------
 void pwm_output_set(unsigned int a,unsigned int b,unsigned int c,unsigned int d)	
 {
 	TimerMatchSet(WTIMER3_BASE,TIMER_A,max_count - a*50);
