@@ -427,6 +427,11 @@
               <FileType>1</FileType>
               <FilePath>.\systick.c</FilePath>
             </File>
+            <File>
+              <FileName>led.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\led.c</FilePath>
+            </File>
           </Files>
         </Group>
       </Groups>

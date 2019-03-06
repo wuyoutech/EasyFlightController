@@ -26,6 +26,8 @@
 #include <config.h>
 #include <mpu6050.h>
 #include <timer.h>
+#include <systick.h>
+#include <led.h>
 
 
 int main(){
@@ -34,6 +36,8 @@ int main(){
 	SysCtlClockSet(SYSCTL_SYSDIV_4|SYSCTL_USE_PLL|SYSCTL_XTAL_16MHZ|
 		SYSCTL_OSC_MAIN);
 	
+	led_init();
+	systick_init();
 	uart_init();
 	printf("message\n");
 	
@@ -44,6 +48,7 @@ int main(){
 	}
 	pwm_input_init();
 	pwm_output_init();
+	
 	
 	while(true)
 	{
