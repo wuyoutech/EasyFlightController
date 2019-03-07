@@ -18,18 +18,11 @@
 #include "driverlib/eeprom.h"
 #include "driverlib/pwm.h"
 
-#include "led.h"
-
-enum status
-{
-	on_init,
-	ready,
-	unlocked,
-	failure
-};
+#include <led.h>
+#include <systick.h>
 
 enum status system_status = on_init;
-
+//----------- init systick ------
 void systick_init(void)
 {
 	SysTickPeriodSet(100000);
@@ -39,73 +32,18 @@ void systick_init(void)
 }
 
 
-
-void status_change(enum status s)
+//------- set system status -------
+void status_set(enum status s)
 {
 	system_status = s;
 }
-
-void led_run(void)
+//------- get system status -------
+enum status status_get(void)
 {
-	static enum status led_status = on_init;
-	static unsigned int count = 0;
-	switch(led_status){
-		case on_init:{
-			if(count == 0){
-				led_status_set(true,false,false);
-			}else if(count == 70){
-				led_status_set(false,true,false);
-			}else if(count == 140){
-				led_status_set(false,false,true);
-			}
-			count++;
-			
-			if(count == 210){
-				count = 0;
-				led_status = system_status;
-			}
-			break;
-		}
-		case ready:{
-			static int status = 0;
-			if(status > 2){
-				if(count == 0){
-					led_status_set(false,false,true);
-				}else if(count == 70){
-					led_status_set(false,false,false);
-				}
-				count++;
-				if(count == 1000){
-					count = 0;
-				}
-			}else if(status == 0){
-				led_status_set(false,false,false);
-				count++;
-				if(count == 500){
-					count = 0;
-					status++;
-				}
-			}else{
-				if(count == 0){
-					led_status_set(false,false,true);
-				}else if(count == 70){
-					led_status_set(false,false,false);
-				}
-				count++;
-				if(count == 140){
-					count=0;
-					status++;
-				}
-			}
-			break;
-		}
-		case unlocked:
-			break;
-		case failure:
-			break;
-	}
+	return system_status;
 }
-
+// ----- systick int handler-------
+// declared in startup.s file 
 void SysTickIntHandler()
 {
 	led_run();
@@ -114,6 +52,9 @@ void SysTickIntHandler()
 	static int count = 0;
 	count++;
 	if(count > 3000){
-		system_status = ready;
+		system_status = unlocked;
+	}
+	if(count >15000){
+		system_status = failure;
 	}
 }
