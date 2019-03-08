@@ -48,8 +48,9 @@ int main(){
 	}
 	pwm_input_init();
 	pwm_output_init();
-	
-	
+	// init finish 
+	status_set(ready);
+
 	while(true)
 	{
 		unsigned int * input;

@@ -46,10 +46,24 @@ enum status status_get(void)
 // declared in startup.s file 
 void SysTickIntHandler()
 {
+	static unsigned int count = 0;
 	led_run();
-	
-	
-	static int count = 0;
+	if(system_status == on_init){
+		// do nothing,
+		// it should be switch to ready in main.c
+		// if initialization spend to much time 
+		// switch to failure
+		if(count > 5000){
+			system_status = failure;
+		}
+	}else if(system_status == ready){
+		//TODO: 
+		// check pwm_input status and
+		// switch to unlocked
+		
+		//TODO:update IMU data
+		
+	}
 	count++;
 	if(count > 3000){
 		system_status = unlocked;
