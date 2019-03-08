@@ -52,3 +52,4 @@ void uart_run(void)
 	scanf("%s",recv_buffer);
 	printf("%s",recv_buffer);
 }
+add
