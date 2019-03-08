@@ -94,6 +94,6 @@ void uart_run(void)
 	// copy paramenter
 	memcpy(paramenter,paramenter_start + 1,paramenter_end - paramenter_start -1);
 	//split paramenter
-	char * result[10];	//support 10 paramenter max
+	char * paramenters[10];	//support 10 paramenter max
 	int paramenter_number = str_split(paramenter,result,',');
 }
