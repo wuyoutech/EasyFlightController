@@ -19,7 +19,30 @@
 #include "driverlib/pwm.h"
 #include <uartstdio.h>
 #include <stdio.h>
-
+#include <string.h>
+//----- string split function ----------
+int str_split(char * str,char ** split_result,char spliter)
+{
+	split_result[0] = str;
+	int a = 1;
+	for(int i = 0;;i++){
+		// if end to NULL
+		// jump out loop
+		if(*(str+i) == 0)
+			break;
+		// if character equal to spliter
+		// set result pointer
+		// and end symbol
+		if(*(str+i) == spliter){
+			split_result[a] = str+i+1;
+			a++;
+			*(str+i) = 0;
+		}
+	}
+	// return numbers of fragment
+	return a;
+}
+//--------- init uart module -----------------
 void uart_init(void)
 {
 	SysCtlPeripheralEnable(SYSCTL_PERIPH_UART0);
@@ -43,12 +66,34 @@ int fgetc(FILE *f)
 	return recv;
 }
 //-------- receive data from uart saving here -------
-char recv_buffer[255];
+char recv_buffer[256];
 //---------commnad input and execute in here --------
 void uart_run(void)
 {
-	// TODO: get message from uart
+	// get message from uart
 	// and execute command
 	scanf("%s",recv_buffer);
-	printf("%s",recv_buffer);
+	// split to "command" and "paramenter"
+	char command[256] = {0};
+	char paramenter[256] = {0};
+	// find '(' in buffer
+	char * paramenter_start = (char *)memchr(recv_buffer,'(',strlen(recv_buffer));
+	if(paramenter_start != NULL){
+		// if find '(' successful
+		memcpy(command,recv_buffer,paramenter_start-recv_buffer);
+	}else{
+		// entire message is command
+		memcpy(command,recv_buffer,strlen(recv_buffer));
+	}
+	// check synatex
+	char * paramenter_end = (char *)memchr(recv_buffer,')',strlen(recv_buffer));
+	if(paramenter_end == NULL){
+		printf("synatex error:%s\n",recv_buffer);
+		return;
+	}
+	// copy paramenter
+	memcpy(paramenter,paramenter_start + 1,paramenter_end - paramenter_start -1);
+	//split paramenter
+	char * result[10];	//support 10 paramenter max
+	int paramenter_number = str_split(paramenter,result,',');
 }
