@@ -2,5 +2,6 @@
 #define __UART_H_
 
 void uart_init(void);
+void uart_run(void);
 
 #endif

@@ -30,9 +30,25 @@ void uart_init(void)
 	UARTClockSourceSet(UART0_BASE,UART_CLOCK_PIOSC);
 	UARTStdioConfig(0,115200,16*1000*1000);
 }
-
+//------ rewrite fputc for printf funciton -----
 int fputc(int ch, FILE *f)
 {
 	UARTCharPut(UART0_BASE,(unsigned char)ch);
 	return ch;
+}
+//------ rewrite fgetc for scnaf function ------
+int fgetc(FILE *f)
+{
+	unsigned int recv = UARTCharGet(UART0_BASE);
+	return recv;
+}
+//-------- receive data from uart saving here -------
+char recv_buffer[255];
+//---------commnad input and execute in here --------
+void uart_run(void)
+{
+	// TODO: get message from uart
+	// and execute command
+	scanf("%s",recv_buffer);
+	printf("%s",recv_buffer);
 }

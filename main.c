@@ -53,6 +53,8 @@ int main(){
 
 	while(true)
 	{
+		uart_run();
+		
 		unsigned int * input;
 		input = pwm_input_get();
 		pwm_output_set(input[2],input[2],input[2],input[2]);
