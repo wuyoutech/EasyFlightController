@@ -269,3 +269,9 @@ struct Euler attitude_get(void){
 	struct Euler attitude = quaternion_to_euler(q);
 	return attitude;
 }
+struct TargetVal attitude_to_target_value(struct Euler euler)
+{
+	
+
+}
+
