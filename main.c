@@ -39,7 +39,6 @@ int main(){
 	led_init();
 	systick_init();
 	uart_init();
-	printf("message\n");
 	
 	config_init();
 	if(!mpu6050_init()){
@@ -50,6 +49,7 @@ int main(){
 	pwm_output_init();
 	// init finish 
 	status_set(ready);
+	printf("system initialization finish\n");
 
 	while(true)
 	{
