@@ -91,7 +91,7 @@ void timer1b_int_handler(void)
 		count = nowtime - lasttime + 0xffff;
 	}
 	lasttime = nowtime;
-	if(count < 12000){
+	if(count < 120000){
 		pwm_input_raw[3] = count / 50;
 	}
 }
@@ -109,7 +109,7 @@ void timer2a_int_handler(void)
 		count = nowtime - lasttime + 0xffff;
 	}
 	lasttime = nowtime;
-	if(count < 12000){
+	if(count < 120000){
 		pwm_input_raw[4] = count / 50;
 	}
 }
@@ -127,7 +127,7 @@ void timer2b_int_handler(void)
 		count = nowtime - lasttime + 0xffff;
 	}
 	lasttime = nowtime;
-	if(count <12000){
+	if(count <120000){
 		pwm_input_raw[5] = count / 50;
 	}
 }
@@ -297,7 +297,7 @@ void pwm_output_init()
 	TimerEnable(WTIMER5_BASE,TIMER_B);
 }
 //-------- pwm output setter -------
-void pwm_output_set(unsigned int a,unsigned int b,unsigned int c,unsigned int d)	
+void pwm_output_set(unsigned int a,unsigned int b,unsigned int c,unsigned int d)
 {
 	TimerMatchSet(WTIMER3_BASE,TIMER_A,max_count - a*50);
 	TimerMatchSet(WTIMER3_BASE,TIMER_B,max_count - b*50);
