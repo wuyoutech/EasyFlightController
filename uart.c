@@ -179,11 +179,13 @@ void uart_run(void)
 	}else if(strcmp(command,"get_pwm_input") == 0){
 		struct config * config = config_get();
 		unsigned int * input = pwm_input_get();
-		printf("pitch = %d,roll = %d,yaw = %d,throttle = %d\n",
+		printf("pitch=%d,roll=%d,yaw=%d,throttle=%d\n,Channel5=%d,Channel6=%d\n",
 			input[config->pitch_channel_number],
 			input[config->roll_channel_number],
 			input[config->yaw_channel_number],
-			input[config->throttle_channel_number]);
+			input[config->throttle_channel_number],
+			input[4],
+			input[5]);
 		
 	}else if(strcmp(command,"get_pwm_input_raw") == 0){
 		unsigned int * result = pwm_input_get_raw();
@@ -196,11 +198,13 @@ void uart_run(void)
 		pwm_calibration();
 		struct config * config = config_get();
 		unsigned int * input = pwm_input_get();
-		printf("pitch = %d,roll = %d,yaw = %d,throttle = %d\n",
+		printf("pitch=%d,roll=%d,yaw=%d,throttle=%d,Channel5=%d,Channel6=%d\n",
 			input[config->pitch_channel_number],
 			input[config->roll_channel_number],
 			input[config->yaw_channel_number],
-			input[config->throttle_channel_number]);
+			input[config->throttle_channel_number],
+			input[4],
+			input[5]);
 	}else{
 		printf("command not support, send 'help' for more infomation\n");
 	}
