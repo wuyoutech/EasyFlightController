@@ -24,6 +24,8 @@ struct Quaternion
 };
 
 struct Euler attitude_get(void);
+struct Euler target_euler_get(void);
+
 bool mpu6050_init(void);
 
 #endif
