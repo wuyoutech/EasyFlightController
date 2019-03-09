@@ -22,6 +22,7 @@
 #include <string.h>
 
 #include <config.h>
+#include <timer.h>
 
 // ------ function for convert string to int -----
 int atoi(const char * str)
@@ -137,6 +138,8 @@ void uart_run(void)
 	if(strcmp(command,"help") == 0){
 		printf("support command list:\n");
 		printf("set input channel(pitch,roll,yaw,throttle)\n");
+		printf("calibreation imu\n");
+		printf("get pwm_input\n");
 	}else if(strcmp(command,"set input channel") == 0){
 		// check paramenter number
 		if(paramenter_number != 4){
@@ -163,6 +166,16 @@ void uart_run(void)
 			config -> throttle_channel_number);
 	}else if(strcmp(command,"calibration imu")){
 		printf("command not support now\n");
+	}else if(strcmp(command,"get pwm_input") == 0){
+		struct config * config = config_get();
+		unsigned int * input = pwm_input_get();
+		
+		printf("pitch = %d,roll = %d,yaw = %d,throttle = %d\n",
+			input[config->pitch_channel_number],
+			input[config->roll_channel_number],
+			input[config->yaw_channel_number],
+			input[config->throttle_channel_number]);
+		
 	}else{
 		printf("command not support, send 'help' for more infomation\n");
 	}
