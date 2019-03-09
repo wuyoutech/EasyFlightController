@@ -191,7 +191,7 @@ void uart_run(void)
 			printf("%d:%d ",i,result[i]);
 		}
 		printf("\n");
-		
+
 	}else if(strcmp(command,"calibration_pwm_input") == 0){
 		pwm_calibration();
 		struct config * config = config_get();
@@ -203,6 +203,5 @@ void uart_run(void)
 			input[config->throttle_channel_number]);
 	}else{
 		printf("command not support, send 'help' for more infomation\n");
-		printf("%s\n",command);
 	}
 }
