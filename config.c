@@ -93,18 +93,34 @@ void config_reset(void)
 {
 	struct config *  config = (struct config *)config_address;
 	//factory settings value
-	config -> pitch_center_shift = 0;
-	config -> roll_center_shift = 0;
-	config -> yaw_center_shift = 0;
-	config -> throttle_minimum_shift = 0;
+	config -> pitch_center_shift      = 0;
+	config -> roll_center_shift       = 0;
+	config -> yaw_center_shift        = 0;
+	config -> throttle_minimum_shift  = 0;
 	
-	config -> pitch_channel_number = 0;
-	config -> roll_channel_number = 1;
-	config -> yaw_channel_number = 2;
+	config -> pitch_channel_number    = 0;
+	config -> roll_channel_number     = 1;
+	config -> yaw_channel_number      = 2;
 	config -> throttle_channel_number = 3;
 
 	config -> euler_range_max = 30;
+
+	//PID parameter
+	config -> pr_angle_kp     = 0.0;
+	config -> pr_angle_ki     = 0.0;
+	config -> pr_angle_kd     = 0.0;
 	
+	config -> pr_velocity_kp  = 0.0;
+	config -> pr_velocity_ki  = 0.0;
+	config -> pr_velocity_kd  = 0.0;
+	
+	config -> yaw_angle_kp    = 0.0;
+	config -> yaw_angle_ki    = 0.0;
+	config -> yaw_angle_kd    = 0.0;
+	
+	config -> yaw_velocity_kp = 0.0;
+	config -> yaw_velocity_ki = 0.0;
+	config -> yaw_velocity_kd = 0.0;
 }
 //----- init config module ---
 void config_init(void)
