@@ -255,10 +255,10 @@ unsigned int * pwm_input_get_raw(void)
 void pwm_calibration(void)
 {
 	struct config * config = config_get();
-	config -> pitch_center_shift = pwm_input_raw[config -> pitch_channel_number];
-	config -> roll_center_shift = pwm_input_raw[config -> roll_channel_number];
-	config -> yaw_center_shift = pwm_input_raw[config -> yaw_center_shift];
-	config -> throttle_minimum_shift = pwm_input_raw[config -> throttle_channel_number];
+	config -> pitch_center_shift = pwm_input_raw[config -> pitch_channel_number] - 1500;
+	config -> roll_center_shift = pwm_input_raw[config -> roll_channel_number] - 1500;
+	config -> yaw_center_shift = pwm_input_raw[config -> yaw_channel_number] - 1500;
+	config -> throttle_minimum_shift = pwm_input_raw[config -> throttle_channel_number] - 1000;
 	config_write();
 }
 /********************************************************************/
