@@ -246,6 +246,12 @@ unsigned int * pwm_input_get(void)
 	
 	return pwm_input_calibrated;
 }
+// ----------- get raw input value -----
+unsigned int * pwm_input_get_raw(void)
+{
+	return pwm_input_raw;
+}
+
 void pwm_calibration(void)
 {
 	struct config * config = config_get();

@@ -3,6 +3,7 @@
 
 void pwm_input_init(void);
 unsigned int * pwm_input_get(void);
+unsigned int * pwm_input_get_raw(void);
 void pwm_calibration(void);
 
 void pwm_output_init(void);
