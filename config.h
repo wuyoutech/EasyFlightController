@@ -20,4 +20,5 @@ struct config
 void config_init(void);
 void config_write(void);
 struct config * config_get(void);
+void config_reset(void);
 #endif

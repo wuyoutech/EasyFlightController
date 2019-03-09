@@ -137,10 +137,18 @@ void uart_run(void)
 	// match command
 	if(strcmp(command,"help") == 0){
 		printf("support command list:\n");
-		printf("set input channel(pitch,roll,yaw,throttle)\n");
-		printf("calibreation imu\n");
-		printf("get pwm_input\n");
-	}else if(strcmp(command,"set input channel") == 0){
+		printf("	reset_config\n");
+		printf("	set_input_channel(pitch,roll,yaw,throttle)\n");
+		printf("	calibreation_imu\n");
+		printf("	get_pwm_input\n");
+		printf("	get_pwm_input_raw\n");
+		printf("	calibration_pwm_input\n");
+		
+	}else if(strcmp(command,"reset_config") == 0){
+		config_reset();
+		printf("reset config success\n");
+		
+	}else if(strcmp(command,"set_input_channel") == 0){
 		// check paramenter number
 		if(paramenter_number != 4){
 			printf("synatex error: %d paramenter found ,require 4\n",paramenter_number);
@@ -164,19 +172,37 @@ void uart_run(void)
 			config -> roll_channel_number,
 			config -> yaw_channel_number,
 			config -> throttle_channel_number);
-	}else if(strcmp(command,"calibration imu")){
+		
+	}else if(strcmp(command,"calibreation_imu") == 0){
 		printf("command not support now\n");
-	}else if(strcmp(command,"get pwm_input") == 0){
+		
+	}else if(strcmp(command,"get_pwm_input") == 0){
 		struct config * config = config_get();
 		unsigned int * input = pwm_input_get();
-		
 		printf("pitch = %d,roll = %d,yaw = %d,throttle = %d\n",
 			input[config->pitch_channel_number],
 			input[config->roll_channel_number],
 			input[config->yaw_channel_number],
 			input[config->throttle_channel_number]);
 		
+	}else if(strcmp(command,"get_pwm_input_raw") == 0){
+		unsigned int * result = pwm_input_get_raw();
+		for(int i = 0;i<6;i++){
+			printf("%d:%d ",i,result[i]);
+		}
+		printf("\n");
+		
+	}else if(strcmp(command,"calibration_pwm_input") == 0){
+		pwm_calibration();
+		struct config * config = config_get();
+		unsigned int * input = pwm_input_get();
+		printf("pitch = %d,roll = %d,yaw = %d,throttle = %d\n",
+			input[config->pitch_channel_number],
+			input[config->roll_channel_number],
+			input[config->yaw_channel_number],
+			input[config->throttle_channel_number]);
 	}else{
 		printf("command not support, send 'help' for more infomation\n");
+		printf("%s\n",command);
 	}
 }

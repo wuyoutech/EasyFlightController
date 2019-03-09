@@ -103,6 +103,7 @@ void config_reset(void)
 	config -> yaw_channel_number = 2;
 	config -> throttle_channel_number = 3;
 	
+	config_write();
 }
 //----- init config module ---
 void config_init(void)
@@ -128,5 +129,4 @@ void config_init(void)
 	if(crc_result != crc_saved){
 		config_reset();
 	}
-	config_write();
 }
