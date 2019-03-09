@@ -14,7 +14,10 @@ struct config
 	short int roll_center_shift;
 	short int yaw_center_shift;
 	short int throttle_minimum_shift;
-
+	//------- unlock range -------
+	unsigned short int unlock_range_minimum;
+	unsigned short int unlock_range_maximum;
+	
 	unsigned int euler_range_max;
 };
 

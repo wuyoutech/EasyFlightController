@@ -139,6 +139,7 @@ void uart_run(void)
 		printf("support command list:\n");
 		printf("	reset_config\n");
 		printf("	set_input_channel(pitch,roll,yaw,throttle)\n");
+		printf("	set_unlock_range(range_minimum,range_maximum)");
 		printf("	calibreation_imu\n");
 		printf("	get_pwm_input\n");
 		printf("	get_pwm_input_raw\n");
@@ -172,6 +173,27 @@ void uart_run(void)
 			config -> roll_channel_number,
 			config -> yaw_channel_number,
 			config -> throttle_channel_number);
+		
+	}else if(strcmp(command,"set_unlock_range") == 0){
+		//check paramenter number
+		if(paramenter_number != 2){
+			printf("synatex error: %d paramenter found ,require 2\n",paramenter_number);
+			return;
+		}
+		int paramenter_number[2];
+		// convert input
+		for(int i=0;i<2;i++){
+			paramenter_number[i] = atoi(paramenters[i]);
+		}
+		struct config * config = config_get();
+		config -> unlock_range_minimum = paramenter_number[0];
+		config -> unlock_range_maximum = paramenter_number[1];
+		// save config
+		config_write();
+		// report result
+		printf("unlock range minimum:%d,maximum:%d\n",
+			config->unlock_range_minimum,
+			config->unlock_range_maximum);
 		
 	}else if(strcmp(command,"calibreation_imu") == 0){
 		printf("command not support now\n");

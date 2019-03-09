@@ -102,6 +102,9 @@ void config_reset(void)
 	config -> roll_channel_number = 1;
 	config -> yaw_channel_number = 2;
 	config -> throttle_channel_number = 3;
+	
+	config -> unlock_range_minimum = 1000;
+	config -> unlock_range_maximum = 1000;
 
 	config -> euler_range_max = 30;
 	
