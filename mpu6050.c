@@ -269,6 +269,8 @@ struct Euler attitude_get(void){
 	struct Euler attitude = quaternion_to_euler(q);
 	return attitude;
 }
+
+//将x,y,z三个方向的欧拉角转换为遥控器的目标控制值
 struct TargetVal attitude_to_target_value(struct Euler euler)
 {
 	
