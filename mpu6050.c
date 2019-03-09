@@ -21,6 +21,7 @@
 #include "driverlib/pwm.h"
 
 #include <mpu6050.h>
+#include <config.h>
 
 #define Byte16(ByteH, ByteL)  \
 		((unsigned short int)((((uint16_t)(ByteH))<<8) | ((uint16_t)(ByteL))))
@@ -270,10 +271,23 @@ struct Euler attitude_get(void){
 	return attitude;
 }
 
-//将x,y,z三个方向的欧拉角转换为遥控器的目标控制值
-struct TargetVal attitude_to_target_value(struct Euler euler)
+//function: According the input of remote control to Get the target euler.
+//return:   Target eluer, range: (-30,+30).
+struct Euler target_euler_get()
 {
-	
+	struct config *config = config_get();
+	unsigned int  *input  = pwm_input_get();
 
+	int pitchErr = input[config->pitch_channel_number] - config->pitch_center_shift;
+	int rollErr  = input[config->roll_channel_number]  - config->roll_center_shift;
+	int yawErr   = input[config->yaw_channel_number]   - config->yaw_center_shift;
+
+	struct Euler target;
+	float k = 30/500.0;		//assume that input deviation is ±500 and taget euler is ±30°.
+	target.x = k*rollErr;
+	target.y = k*pitchErr;
+	target.z = k*yawErr;
+
+	return target;
 }
 
