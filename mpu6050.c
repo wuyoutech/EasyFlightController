@@ -22,6 +22,7 @@
 
 #include <mpu6050.h>
 #include <config.h>
+#include <timer.h>
 
 #define Byte16(ByteH, ByteL)  \
 		((unsigned short int)((((uint16_t)(ByteH))<<8) | ((uint16_t)(ByteL))))
