@@ -272,18 +272,23 @@ struct Euler attitude_get(void){
 }
 
 //function: According the input of remote control to Get the target euler.
-//return:   Target eluer, range: (-30,+30).
+//return:   Target eluer, range: ref to config_reset().
 struct Euler target_euler_get()
 {
 	struct config *config = config_get();
 	unsigned int  *input  = pwm_input_get();
 
+    //Get the deviation of the input value relative to the median.
 	int pitchErr = input[config->pitch_channel_number] - config->pitch_center_shift;
 	int rollErr  = input[config->roll_channel_number]  - config->roll_center_shift;
 	int yawErr   = input[config->yaw_channel_number]   - config->yaw_center_shift;
 
 	struct Euler target;
-	float k = 30/500.0;		//assume that input deviation is ±500 and taget euler is ±30°.
+	unsigned int range = config->euler_range_max;
+	
+	float k  = range/500.0; //assume that input deviation is ±500.
+
+	//Conversion
 	target.x = k*rollErr;
 	target.y = k*pitchErr;
 	target.z = k*yawErr;

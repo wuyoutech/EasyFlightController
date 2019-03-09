@@ -102,6 +102,8 @@ void config_reset(void)
 	config -> roll_channel_number = 1;
 	config -> yaw_channel_number = 2;
 	config -> throttle_channel_number = 3;
+
+	config -> euler_range_max = 30;
 	
 }
 //----- init config module ---

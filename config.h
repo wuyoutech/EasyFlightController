@@ -14,6 +14,8 @@ struct config
 	short int roll_center_shift;
 	short int yaw_center_shift;
 	short int throttle_minimum_shift;
+
+	unsigned int euler_range_max;
 };
 
 //----- functions -------
