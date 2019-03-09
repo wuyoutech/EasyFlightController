@@ -161,9 +161,8 @@ void uart_run(void)
 			config -> roll_channel_number,
 			config -> yaw_channel_number,
 			config -> throttle_channel_number);
-	}else if(false){
-	
-	
+	}else if(strcmp(command,"calibration imu")){
+		printf("command not support now\n");
 	}else{
 		printf("command not support, send 'help' for more infomation\n");
 	}
