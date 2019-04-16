@@ -130,6 +130,8 @@ struct RawValue acc_filter(struct RawValue input)
 	avg.z = z / FILTER_LENGTH;
 	return avg;
 }
+// =============== variables ==========
+struct Euler attitude;
 
 float invSqrt(float x) {
 	float halfx = 0.5f * x;
@@ -141,11 +143,33 @@ float invSqrt(float x) {
 	return y;
 }
 
+struct Euler quaternion_to_euler(struct Quaternion q)
+{
+	const float PI = 3.1415926;
+	const double Epsilon = 0.0009765625f;
+    const double Threshold = 0.5f - Epsilon;
+	
+	double TEST = q.q0 * q.q2 - q.q1 * q.q3;
+	
+	struct Euler result;
+	
+	if(TEST < -Threshold || TEST > Threshold){
+		int sign = TEST>0?1:-1;
+		result.z = -1 * sign * (double)atan2(q.q1,q.q0);
+		result.y = sign * (PI / 2.0f);
+		result.x = 0;
+	}else{
+		result.x = atan2(2 * (q.q2 * q.q3 + q.q0 * q.q1),q.q0*q.q0 - q.q1 *q.q1 -q.q2*q.q2 + q.q3*q.q3);
+		result.y = asin(-2 * (q.q1 * q.q3 - q.q0* q.q2));
+		result.z = atan2(2 * (q.q1 * q.q2 + q.q0*q.q3),q.q0*q.q0 + q.q1*q.q1 - q.q2*q.q2 - q.q3*q.q3);
+	}
+	return result;
+}
 
 #define GYRO_GR	0.0010653f
 
 #define sampleFreq	1000.0f			// sample frequency in Hz
-#define twoKpDef	(2.0f * 0.5f)	// 2 * proportional gain
+#define twoKpDef	(5.0f * 0.5f)	// 2 * proportional gain
 #define twoKiDef	(2.0f * 0.0f)	// 2 * integral gain
 
 
@@ -157,7 +181,7 @@ volatile float twoKi = twoKiDef;											// 2 * integral gain (Ki)
 volatile float q0 = 1.0f, q1 = 0.0f, q2 = 0.0f, q3 = 0.0f;					// quaternion of sensor frame relative to auxiliary frame
 volatile float integralFBx = 0.0f,  integralFBy = 0.0f, integralFBz = 0.0f;	// integral error terms scaled by Ki
 
-struct Quaternion MahonyAHRSupdateIMU(float gx, float gy, float gz, float ax, float ay, float az) {
+struct Euler MahonyAHRSupdateIMU(float gx, float gy, float gz, float ax, float ay, float az) {
 	float recipNorm;
 	float halfvx, halfvy, halfvz;
 	float halfex, halfey, halfez;
@@ -228,33 +252,10 @@ struct Quaternion MahonyAHRSupdateIMU(float gx, float gy, float gz, float ax, fl
 	result.q1 = q1;
 	result.q2 = q2;
 	result.q3 = q3;
-	return result;
+	return quaternion_to_euler(result);
 }
 
-struct Euler quaternion_to_euler(struct Quaternion q)
-{
-	const float PI = 3.1415926;
-	const double Epsilon = 0.0009765625f;
-    const double Threshold = 0.5f - Epsilon;
-	
-	double TEST = q.q0 * q.q2 - q.q1 * q.q3;
-	
-	struct Euler result;
-	
-	if(TEST < -Threshold || TEST > Threshold){
-		int sign = TEST>0?1:-1;
-		result.z = -1 * sign * (double)atan2(q.q1,q.q0);
-		result.y = sign * (PI / 2.0f);
-		result.x = 0;
-	}else{
-		result.x = atan2(2 * (q.q2 * q.q3 + q.q0 * q.q1),q.q0*q.q0 - q.q1 *q.q1 -q.q2*q.q2 + q.q3*q.q3);
-		result.y = asin(-2 * (q.q1 * q.q3 - q.q0* q.q2));
-		result.z = atan2(2 * (q.q1 * q.q2 + q.q0*q.q3),q.q0*q.q0 + q.q1*q.q1 - q.q2*q.q2 - q.q3*q.q3);
-	}
-	return result;
-}
-
-struct Euler attitude_get(void){
+void attitude_update(void){
 	unsigned char buff[14];
 	mpu6050_get_value(buff);
 	struct RawValue accel,gyro;
@@ -266,9 +267,12 @@ struct Euler attitude_get(void){
 	gyro.y = Byte16(buff[10],buff[11]);
 	gyro.z = Byte16(buff[12],buff[13]);
 	
-	accel = acc_filter(accel);
-	struct Quaternion q =  MahonyAHRSupdateIMU(accel.x,accel.y,accel.z,gyro.x,gyro.y,gyro.z);
-	struct Euler attitude = quaternion_to_euler(q);
+	//accel = acc_filter(accel);
+	attitude = MahonyAHRSupdateIMU(gyro.x,gyro.y,gyro.z,accel.x,accel.y,accel.z);
+}
+
+
+struct Euler attitude_get(void){
 	return attitude;
 }
 

@@ -20,12 +20,13 @@
 
 #include <led.h>
 #include <systick.h>
+#include <mpu6050.h>
 
 enum status system_status = on_init;
 //----------- init systick ------
 void systick_init(void)
 {
-	SysTickPeriodSet(100000);
+	SysTickPeriodSet(1000000);
 	IntMasterEnable();
 	SysTickIntEnable();
 	SysTickEnable();
@@ -47,6 +48,7 @@ enum status status_get(void)
 void SysTickIntHandler()
 {
 	static unsigned int count = 0;
+	count++;
 	led_run();
 	if(system_status == on_init){
 		// do nothing,
@@ -56,7 +58,11 @@ void SysTickIntHandler()
 		if(count > 5000){
 			system_status = failure;
 		}
-	}else if(system_status == ready){
+		return;
+	}
+	// update attitude
+	attitude_update();
+	if(system_status == ready){
 		//TODO: 
 		// check pwm_input status and
 		// switch to unlocked
@@ -64,11 +70,5 @@ void SysTickIntHandler()
 		//TODO:update IMU data
 		
 	}
-	count++;
-	if(count > 3000){
-		system_status = unlocked;
-	}
-	if(count >15000){
-		system_status = failure;
-	}
+	
 }
