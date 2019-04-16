@@ -23,6 +23,8 @@
 
 #include <config.h>
 #include <timer.h>
+#include <mpu6050.h>
+
 
 // ------ function for convert string to int -----
 int atoi(const char * str)
@@ -144,6 +146,7 @@ void uart_run(void)
 		printf("	get_pwm_input\n");
 		printf("	get_pwm_input_raw\n");
 		printf("	calibration_pwm_input\n");
+		printf("	get_attitude\n");
 		
 	}else if(strcmp(command,"reset_config") == 0){
 		config_reset();
@@ -227,6 +230,9 @@ void uart_run(void)
 			input[config->throttle_channel_number],
 			input[4],
 			input[5]);
+	}else if(strcmp(command,"get_attitude") == 0){
+		struct Euler attitude = attitude_get();
+		printf("attitude:%f,%f,%f\n",attitude.x,attitude.y,attitude.z);
 	}else{
 		printf("command not support, send 'help' for more infomation\n");
 	}
